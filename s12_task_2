@@ -1,0 +1,26 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+import matplotlib.ticker as ticker
+def fit_func(x, c):
+    return c
+a = 12316**12316
+hst = np.array([])
+while (a>0):
+    hst = np.append(hst, a % 10)
+    a //= 10
+xdata = np.unique(hst)
+ydata = np.unique(hst, return_counts=True)[1]
+par, matrix = curve_fit(fit_func, xdata, ydata)
+fig = plt.figure()
+ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+ax.grid()
+ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+ax.hist(hst, 10, range=[-0.5, 9.5], lw=5, edgecolor='darkblue', label='Распределение цифр от 0 до 9')
+ax.legend()
+chi2 =((((ydata-fit_func(xdata, par))**2) / (fit_func(xdata, par))).sum())
+chi21 = ((((ydata.sum()/10)-ydata)**2) / ydata).sum()
+print('c=', par)
+print('chi2=', chi2)
+print('chi2(1)=', chi21)
+plt.show()
